@@ -38,14 +38,9 @@ class pmcTaxonomyWidget extends \WP_Widget {
         }
 
         $terms = get_terms('pmcbrand');
-        $tax_query = array();
+        $term_ids = array();
         foreach ($terms as $term) {
-            $tax_query[] = array(
-                'taxonomy' => 'pmcbrand',
-                'field' => 'term_taxonomy_id',
-                'terms' => $term->term_id,
-                'include_children' => true
-            );
+            $term_ids[] = $term->term_id;
         }
 
         $pmc_args = array(
@@ -62,7 +57,12 @@ class pmcTaxonomyWidget extends \WP_Widget {
             ),
             'tax_query' => array(
                 'relation' => 'OR',
-                $tax_query
+                array(
+                    'taxonomy' => 'pmcbrand',
+                    'field' => 'term_id',
+                    'terms' => $term_ids,
+                    'include_children' => true
+                )
             )
         );
 
