@@ -31,12 +31,12 @@ class pmcWidget extends \WP_Widget {
         $per_page = ( (is_front_page() && is_home()) || is_front_page() ) ? $show_per_page : $show_per_page + 1;
 
         $pmc_args = array(
-            'posts_per_page'   => $per_page,
-            'orderby'          => 'date',
-            'order'            => 'DESC',
-            'post_type'        => 'pmc',
-            'post_status'      => 'publish',
-            'date_query'     => array(
+            'posts_per_page' => $per_page,
+            'orderby' => 'date',
+            'order' => 'DESC',
+            'post_type' => 'pmc',
+            'post_status' => 'publish',
+            'date_query' => array(
                 array(
                     'after' => '30 days ago',
                     'inclusive' => true,

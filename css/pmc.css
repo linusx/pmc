@@ -24,3 +24,13 @@
     margin-top: 0px;
     font-size: 10px;
 }
+
+.pmc-author-wraper {
+	float: left;
+	width: 45px;
+	margin-right: 5px;
+}
+
+.pmc-comment-wrapper {
+	font-size: 11px;
+}

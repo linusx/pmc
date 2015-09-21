@@ -4,6 +4,7 @@ namespace PMC\PostType;
 
 require_once( 'pmc-widget.php' );
 require_once( 'pmc-taxonomy-widget.php' );
+require_once( 'pmc-comment-widget.php' );
 
 /**
  * Plugin Name: PMC Custom Post Type Widget
@@ -88,6 +89,7 @@ class pmcPostType {
     public function registerWidgets() {
         register_widget( 'PMC\Widget\pmcWidget' );
         register_widget( 'PMC\Widget\pmcTaxonomyWidget' );
+        register_widget( 'PMC\Widget\pmcCommentWidget' );
     }
 
     /**
