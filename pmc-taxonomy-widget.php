@@ -37,9 +37,9 @@ class pmcTaxonomyWidget extends \WP_Widget {
             }
         }
 
-        $myterms = get_terms('pmcbrand');
+        $terms = get_terms('pmcbrand');
         $tax_query = array();
-        foreach ($myterms as $term) {
+        foreach ($terms as $term) {
             $tax_query[] = array(
                 'taxonomy' => 'pmcbrand',
                 'field' => 'term_taxonomy_id',
