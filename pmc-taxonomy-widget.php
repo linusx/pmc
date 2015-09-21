@@ -26,16 +26,9 @@ class pmcTaxonomyWidget extends \WP_Widget {
 
         $current_post = $post;
 
+        $show_per_page = !empty( $instance['show'] ) ? (integer) $instance['show'] : 5;
         $title = apply_filters( 'widget_title', $instance['title'] );
-        $per_page = ( is_front_page() && is_home() || is_front_page() ) ? 5 : 6;
-
-        echo $args['before_widget'];
-
-        if ( !empty($instance['show_title']) ) {
-            if ( ! empty( $title ) ) {
-                echo $args['before_title'] . $title . $args['after_title'];
-            }
-        }
+        $per_page = ( (is_front_page() && is_home()) || is_front_page() ) ? $show_per_page : $show_per_page + 1;
 
         $terms = get_terms('pmcbrand');
         $term_ids = array();
@@ -68,7 +61,15 @@ class pmcTaxonomyWidget extends \WP_Widget {
 
         $query = new \WP_Query( $pmc_args );
 
-        if ( $query->have_posts() ) { ?>
+        if ( $query->have_posts() ) {
+            echo $args['before_widget'];
+
+            if ( !empty($instance['show_title']) ) {
+                if ( ! empty( $title ) ) {
+                    echo $args['before_title'] . $title . $args['after_title'];
+                }
+            } ?>
+
             <ul class="pmc"><?php
             while ($query->have_posts()) {
                 $query->the_post();
@@ -85,9 +86,9 @@ class pmcTaxonomyWidget extends \WP_Widget {
             wp_reset_postdata();
             ?>
             </ul><?php
-        }
 
-        echo $args['after_widget'];
+            echo $args['after_widget'];
+        }
     }
 
     /**
@@ -98,10 +99,28 @@ class pmcTaxonomyWidget extends \WP_Widget {
     public function form( $instance ) {
         $title = isset( $instance[ 'title' ] ) ? $instance[ 'title' ] : __( 'PMC', 'pmc_widget_domain' );
         $show_title = !empty( $instance[ 'show_title' ] ) ? 'checked="checked"' : '';
+        $show = !empty( $instance[ 'show' ] ) ? (integer) $instance['show'] : 5;
+        $less_than = !empty( $instance[ 'less_than' ] ) ? (integer) $instance['less_than'] : 30;
         ?>
         <p>
         <label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label>
         <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
+        </p>
+        <p>
+        <label for="<?php echo $this->get_field_id( 'show' ); ?>"><?php _e( 'Show:' ); ?></label>
+        <select class="widefat" id="<?php echo $this->get_field_id( 'show' ); ?>" name="<?php echo $this->get_field_name( 'show' ); ?>">
+            <?php for($i = 1; $i <= 20; $i++) { ?>
+                <option value="<?php echo $i; ?>"<?php echo $i === $show ? ' selected="selected"' : ''; ?>><?php echo $i; ?> post<?php echo $i > 1 ? 's' : ''; ?></option><?php
+            } ?>
+        </select>
+        </p>
+        <p>
+        <label for="<?php echo $this->get_field_id( 'less_than' ); ?>"><?php _e( 'Less Than:' ); ?></label>
+        <select class="widefat" id="<?php echo $this->get_field_id( 'less_than' ); ?>" name="<?php echo $this->get_field_name( 'less_than' ); ?>">
+            <?php for($i = 1; $i <= 120; $i++) { ?>
+                <option value="<?php echo $i; ?>"<?php echo $i === $less_than ? ' selected="selected"' : ''; ?>><?php echo $i; ?> day<?php echo $i > 1 ? 's' : ''; ?> old</option><?php
+            } ?>
+        </select>
         </p>
         <p>
         <label for="<?php echo $this->get_field_id( 'show_title' ); ?>"><?php _e( 'Show Title:' ); ?></label>
@@ -121,6 +140,8 @@ class pmcTaxonomyWidget extends \WP_Widget {
         $instance = array();
         $instance['title'] = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
         $instance['show_title'] = ( ! empty( $new_instance['show_title'] ) ) ? strip_tags( $new_instance['show_title'] ) : 0;
+        $instance['show'] = !empty( $new_instance['show'] ) ? (integer) $new_instance['show'] : 5;
+        $instance['less_than'] = !empty( $new_instance['less_than'] ) ? (integer) $new_instance['less_than'] : 30;
         return $instance;
     }
 }
