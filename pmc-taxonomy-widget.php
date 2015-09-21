@@ -2,14 +2,14 @@
 
 namespace PMC\Widget;
 
-class pmcWidget extends \WP_Widget {
+class pmcTaxonomyWidget extends \WP_Widget {
 
     public function __construct() {
 
         parent::__construct(
-            'pmc_widget',
-            __('PMC Widget', 'pmc_widget_domain'),
-            array( 'description' => __( 'Show up to 5 most recent posts, maximum of 30 days old', 'pmc_widget_domain' ), )
+            'pmc_taxonomy_widget',
+            __('PMC Taxonomy Widget', 'pmc_widget_domain'),
+            array( 'description' => __( 'Show up to 5 most recent posts with PMC Brand taxonomy, maximum of 30 days old', 'pmc_widget_domain' ), )
         );
 
     }
@@ -37,18 +37,33 @@ class pmcWidget extends \WP_Widget {
             }
         }
 
+        $myterms = get_terms('pmcbrand');
+        $tax_query = array();
+        foreach ($myterms as $term) {
+            $tax_query[] = array(
+                'taxonomy' => 'pmcbrand',
+                'field' => 'term_taxonomy_id',
+                'terms' => $term->term_id,
+                'include_children' => true
+            );
+        }
+
         $pmc_args = array(
-            'posts_per_page'   => $per_page,
-            'orderby'          => 'date',
-            'order'            => 'DESC',
-            'post_type'        => 'pmc',
-            'post_status'      => 'publish',
-            'date_query'     => array(
+            'posts_per_page' => $per_page,
+            'orderby' => 'date',
+            'order' => 'DESC',
+            'post_type' => 'post',
+            'post_status' => 'publish',
+            'date_query' => array(
                 array(
                     'after' => '30 days ago',
                     'inclusive' => true,
                 ),
             ),
+            'tax_query' => array(
+                'relation' => 'OR',
+                $tax_query
+            )
         );
 
         $query = new \WP_Query( $pmc_args );

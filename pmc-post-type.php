@@ -3,6 +3,7 @@
 namespace PMC\PostType;
 
 require_once( 'pmc-widget.php' );
+require_once( 'pmc-taxonomy-widget.php' );
 
 /**
  * Plugin Name: PMC Custom Post Type Widget
@@ -11,15 +12,41 @@ require_once( 'pmc-widget.php' );
  */
 
 class pmcPostType {
-    
+
     public function __construct() {
-        add_action( 'init', array($this, 'registerPostType') );
-        add_action( 'widgets_init', array($this, 'registerWidget') );
+        add_action( 'init', array($this, 'pmcInit') );
+        add_action( 'widgets_init', array($this, 'registerWidgets') );
         add_action( 'wp_enqueue_scripts', array($this, 'pmcScriptsStyles') );
     }
-    
+
+    /**
+     * Initialize PMC
+     */
+    public function pmcInit() {
+        $this->registerPostType();
+        $this->registerTaxonomy();
+    }
+
+    /**
+     * Register PMC taxonomy
+     */
+    public function registerTaxonomy() {
+        register_taxonomy(
+            'pmcbrand',
+            array('pmc','post'),
+            array(
+                'label' => __( 'PMC Brand' ),
+                'rewrite' => array( 'slug' => 'pmcbrand' ),
+                'hierarchical' => true
+            )
+        );
+    }
+
+    /**
+     * Register PMC Post Type
+     */
     public function registerPostType() {
-        $labels = array( 
+        $labels = array(
             'name' => _x( 'PMC', 'pmc' ),
             'singular_name' => _x( 'PMC', 'pmc' ),
             'add_new' => _x( 'Add New', 'pmc' ),
@@ -34,7 +61,7 @@ class pmcPostType {
             'menu_name' => _x( 'PMC\'s', 'pmc' ),
         );
 
-        $args = array( 
+        $args = array(
             'labels' => $labels,
             'hierarchical' => false,
             'description' => 'Allows the user to create pmc\'s',
@@ -54,11 +81,18 @@ class pmcPostType {
 
         register_post_type( 'pmc', $args );
     }
-    
-    public function registerWidget() {
+
+    /**
+     * Register the PMC Post Type Widget
+     */
+    public function registerWidgets() {
         register_widget( 'PMC\Widget\pmcWidget' );
+        register_widget( 'PMC\Widget\pmcTaxonomyWidget' );
     }
-    
+
+    /**
+     * Add Custom Styles
+     */
     public function pmcScriptsStyles() {
         wp_enqueue_style( 'style-name', plugins_url( 'css/pmc.css', __FILE__ ) );
     }
