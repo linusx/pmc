@@ -122,8 +122,8 @@ class pmcWidget extends \WP_Widget {
      */
     public function update( $new_instance, $old_instance ) {
         $instance = array();
-        $instance['title'] = !empty( $new_instance['title'] ) ? strip_tags( $new_instance['title'] ) : '';
-        $instance['show_title'] = !empty( $new_instance['show_title'] ) ? strip_tags( $new_instance['show_title'] ) : 0;
+        $instance['title'] = !empty( $new_instance['title'] ) ? sanitize_text_field( $new_instance['title'] ) : '';
+        $instance['show_title'] = !empty( $new_instance['show_title'] ) ? sanitize_text_field( $new_instance['show_title'] ) : 0;
         $instance['show'] = !empty( $new_instance['show'] ) ? (integer) $new_instance['show'] : 5;
         $instance['less_than'] = !empty( $new_instance['less_than'] ) ? (integer) $new_instance['less_than'] : 30;
         return $instance;

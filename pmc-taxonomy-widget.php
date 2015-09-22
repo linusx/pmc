@@ -24,16 +24,34 @@ class pmcTaxonomyWidget extends \WP_Widget {
     public function widget( $args, $instance ) {
         global $post;
 
+        $cache_key = md5(__METHOD__ . 'pmc_taxonomy');
+
         $current_post = $post;
 
         $show_per_page = !empty( $instance['show'] ) ? (integer) $instance['show'] : 5;
         $title = apply_filters( 'widget_title', $instance['title'] );
         $per_page = ( (is_front_page() && is_home()) || is_front_page() ) ? $show_per_page : $show_per_page + 1;
 
-        $terms = get_terms('pmcbrand');
-        $term_ids = array();
-        foreach ($terms as $term) {
-            $term_ids[] = $term->term_id;
+        $term_ids = wp_cache_get( $cache_key, \PMC\PostType\pmcPostType::$cache_group );
+
+        print "<pre>";
+        print "<h1>ONE</h1>";
+        print_r($term_ids);
+        print "</pre>";
+
+        if (empty($term_ids)) {
+            $terms = get_terms('pmcbrand');
+            $term_ids = array();
+            foreach ($terms as $term) {
+                $term_ids[] = $term->term_id;
+            }
+            print "<pre>";
+            print "<h1>TWO</h1>";
+            print_r($term_ids);
+            print "</pre>";
+
+            error_log( "Setting Cache" );
+            wp_cache_add($cache_key, $term_ids, \PMC\PostType\pmcPostType::$cache_group, \PMC\PostType\pmcPostType::$cache_expire);
         }
 
         $pmc_args = array(
@@ -138,8 +156,8 @@ class pmcTaxonomyWidget extends \WP_Widget {
      */
     public function update( $new_instance, $old_instance ) {
         $instance = array();
-        $instance['title'] = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
-        $instance['show_title'] = ( ! empty( $new_instance['show_title'] ) ) ? strip_tags( $new_instance['show_title'] ) : 0;
+        $instance['title'] = ( ! empty( $new_instance['title'] ) ) ? sanitize_text_field( $new_instance['title'] ) : '';
+        $instance['show_title'] = ( ! empty( $new_instance['show_title'] ) ) ? sanitize_text_field( $new_instance['show_title'] ) : 0;
         $instance['show'] = !empty( $new_instance['show'] ) ? (integer) $new_instance['show'] : 5;
         $instance['less_than'] = !empty( $new_instance['less_than'] ) ? (integer) $new_instance['less_than'] : 30;
         return $instance;

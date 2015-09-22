@@ -14,6 +14,9 @@ require_once( 'pmc-comment-widget.php' );
 
 class pmcPostType {
 
+    public static $cache_group = 'pmc';
+    public static $cache_expire = 3600;
+
     public function __construct() {
         add_action( 'init', array($this, 'pmcInit') );
         add_action( 'widgets_init', array($this, 'registerWidgets') );
