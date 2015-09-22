@@ -34,3 +34,14 @@
 .pmc-comment-wrapper {
 	font-size: 11px;
 }
+
+.img-wrapper {
+    min-width: 150px;
+    min-height: 150px;
+}
+
+.pmc-header {
+    font-weight: bold;
+    font-size: 12px;
+    margin-bottom: 5px;
+}

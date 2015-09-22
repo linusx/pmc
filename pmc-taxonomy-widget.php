@@ -77,7 +77,7 @@ class pmcTaxonomyWidget extends \WP_Widget {
                     <li>
                         <div class="pmc-wrapper">
                             <a href="<?php the_permalink(); ?>" class="pmc-title"><?php the_title(); ?></a>
-                            <a href="<?php the_permalink(); ?>"><?php echo get_the_post_thumbnail(get_the_ID(), 'thumbnail' ); ?></a>
+                            <div class="img-wrapper"><a href="<?php the_permalink(); ?>"><?php echo has_post_thumbnail() ? get_the_post_thumbnail(get_the_ID(), 'thumbnail' ) : '<img src="' . plugins_url( 'images/placeholder.png', __FILE__ ) . '" width="150" height="150" alt="Default" />'; ?></a></div>
                             <span class="pmc-author">Author: <?php echo ucwords(get_author_name()); ?></span>
                         </div>
                     </li><?php
