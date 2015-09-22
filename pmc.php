@@ -7,7 +7,7 @@ require_once( 'pmc-taxonomy-widget.php' );
 require_once( 'pmc-comment-widget.php' );
 
 /**
- * Plugin Name: PMC Custom Post Type Widget
+ * Plugin Name: PMC Widgets
  * Description: Register a new custom post type.<br/> A widget which show up to 5 most recent posts, maximum of 30 days old, for posts of that custom post type.<br/>Display the post title, post featured image thumbnail, and author name.<br/> The post title and image should link to the post. If placed in a post's sidebar, make sure the current post is not included in the list.
  * Author: Bill Van Pelt
  */

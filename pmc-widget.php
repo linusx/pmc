@@ -62,7 +62,7 @@ class pmcWidget extends \WP_Widget {
                         <div class="pmc-wrapper">
                             <a href="<?php the_permalink(); ?>" class="pmc-title"><?php the_title(); ?></a>
                             <div class="img-wrapper"><a href="<?php the_permalink(); ?>"><?php echo has_post_thumbnail() ? get_the_post_thumbnail(get_the_ID(), 'thumbnail' ) : '<img src="' . plugins_url( 'images/placeholder.png', __FILE__ ) . '" width="150" height="150" alt="Default" />'; ?></a></div>
-                            <span class="pmc-author">Author: <?php echo ucwords(get_author_name()); ?></span>
+                            <span class="pmc-author">Author: <?php echo ucwords(get_the_author_meta('display_name')); ?></span>
                         </div>
                     </li><?php
                 }

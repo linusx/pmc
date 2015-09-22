@@ -7,20 +7,18 @@ require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 class pmcCommentWidget extends \WP_Widget {
 
     public function __construct() {
-
         parent::__construct(
             'pmc_comment_widget',
             __('PMC Comment Widget', 'pmc_widget_domain'),
             array( 'description' => __( 'Shows up to 1 post with the highest comment count by the selected author AND up to 1 most recent comment by the same author AND the author\'s gravatar', 'pmc_widget_domain' ), )
         );
-
     }
 
     /**
      * Display the widget on the page
      * If Co-Authors Plus plugin is installed and active
      * it will display all authors
-     * 
+     *
      * @global type $post
      * @param array $args
      * @param object $instance
@@ -31,12 +29,8 @@ class pmcCommentWidget extends \WP_Widget {
         $author = $instance['author'];
 
         if (!empty($author)) {
-            echo $args['before_widget']; ?>
+            echo $args['before_widget'];
 
-            <div class="pmc-header">
-                Most Commented From <?php echo ucwords(get_author_name($author)); ?>
-            </div><?php
-            
             /**
              * Post by auther
              */
@@ -47,11 +41,15 @@ class pmcCommentWidget extends \WP_Widget {
                 'post_status' => 'publish',
                 'author' => $author,
                 'post__not_in' => array($post->ID)
-            );            
-            
+            );
+
             $query = new \WP_Query( $pmc_args );
 
             if ( $query->have_posts() ) { ?>
+                <div class="pmc-header">
+                    Most Commented From <?php echo ucwords(get_the_author_meta('display_name', $author)); ?>
+                </div>
+
                 <ul class="pmc"><?php
                 while ($query->have_posts()) {
                     $query->the_post(); ?>
@@ -59,14 +57,14 @@ class pmcCommentWidget extends \WP_Widget {
                         <div class="pmc-wrapper">
                             <a href="<?php the_permalink(); ?>" class="pmc-title"><?php the_title(); ?></a>
                             <div class="img-wrapper"><a href="<?php the_permalink(); ?>"><?php echo has_post_thumbnail() ? get_the_post_thumbnail(get_the_ID(), 'thumbnail' ) : '<img src="' . plugins_url( 'images/placeholder.png', __FILE__ ) . '" width="150" height="150" alt="Default" />'; ?></a></div><?php
-                            $authors = array(ucwords(get_author_name()));
+                            $authors = array(ucwords(get_the_author_meta('display_name')));
                             if (is_plugin_active('co-authors-plus/co-authors-plus.php')) {
                                 $coauthors = get_coauthors(get_the_ID());
                                 if (!empty($coauthors)) {
                                     $authors = array();
                                     foreach($coauthors as $coauthor) {
                                         if (!empty($coauthor->display_name)) {
-                                            $authors[] = ucwords($coauthor->display_name);
+                                            $authors[] = ucwords(esc_textarea($coauthor->display_name));
                                         }
                                     }
                                 }
@@ -96,7 +94,7 @@ class pmcCommentWidget extends \WP_Widget {
 
             if ( !empty($comments) ) { ?>
                 <div class="pmc-header">
-                    Latest Comment From <?php echo ucwords(get_author_name($author)); ?>
+                    Latest Comment From <?php echo ucwords(get_the_author_meta('display_name', $author)); ?>
                 </div>
                 <ul class="pmc"><?php
                 foreach($comments as $comment) {
@@ -117,13 +115,12 @@ class pmcCommentWidget extends \WP_Widget {
                         </div>
                     </li><?php
                 }
-                
+
                 wp_reset_postdata(); ?>
                 </ul><?php
             }
 
             echo $args['after_widget'];
-
         }
     }
 
@@ -133,10 +130,7 @@ class pmcCommentWidget extends \WP_Widget {
      * @param object $instance
      */
     public function form( $instance ) {
-        $title = isset( $instance[ 'title' ] ) ? $instance[ 'title' ] : __( 'PMC', 'pmc_widget_domain' );
-        $show_title = !empty( $instance[ 'show_title' ] ) ? 'checked="checked"' : '';
-        $author = !empty( $instance[ 'author' ] ) ? $instance['author'] : false;
-        ?>
+        $author = !empty( $instance[ 'author' ] ) ? $instance['author'] : false; ?>
         <p>
         <label for="<?php echo $this->get_field_id( 'author' ); ?>"><?php _e( 'Author:' ); ?></label>
         <?php wp_dropdown_users(array('name' => $this->get_field_name( 'author' ), 'selected' => $author, 'id' => $this->get_field_id( 'author' ), 'class' => 'widefat', 'show_option_none' => 'Select Author')); ?>
@@ -155,5 +149,15 @@ class pmcCommentWidget extends \WP_Widget {
         $instance = array();
         $instance['author'] = !empty( $new_instance['author'] ) ? $new_instance['author'] : '';
         return $instance;
+    }
+
+    /**
+     * Since we don't really any calls that are good to test
+     * this is just a sample call that I made a test for.
+     *
+     * @return array
+     */
+    public function getFakeForTest() {
+        return array('fake' => true, 'data' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam finibus nunc tincidunt magna euismod interdum.');
     }
 }
