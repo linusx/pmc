@@ -1,9 +1,9 @@
 <?php
 
-class testCommentWidget extends WP_UnitTestCase {
+class testWidget extends WP_UnitTestCase {
 
     function testAuthorSQL() {
-        $pmc = new \PMC\Widget\pmcCommentWidget();
+        $pmc = new \PMC\Widget\pmcWidget();
         $this->assertArrayHasKey( 'data', $pmc->getFakeForTest() );
     }
 }

@@ -128,4 +128,14 @@ class pmcWidget extends \WP_Widget {
         $instance['less_than'] = !empty( $new_instance['less_than'] ) ? (integer) $new_instance['less_than'] : 30;
         return $instance;
     }
+
+    /**
+     * Since we don't really any calls that are good to test
+     * this is just a sample call that I made a test for.
+     *
+     * @return array
+     */
+    public function getFakeForTest() {
+        return array('fake' => true, 'data' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam finibus nunc tincidunt magna euismod interdum.');
+    }
 }
