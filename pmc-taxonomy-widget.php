@@ -34,23 +34,12 @@ class pmcTaxonomyWidget extends \WP_Widget {
 
         $term_ids = wp_cache_get( $cache_key, \PMC\PostType\pmcPostType::$cache_group );
 
-        print "<pre>";
-        print "<h1>ONE</h1>";
-        print_r($term_ids);
-        print "</pre>";
-
         if (empty($term_ids)) {
             $terms = get_terms('pmcbrand');
             $term_ids = array();
             foreach ($terms as $term) {
                 $term_ids[] = $term->term_id;
             }
-            print "<pre>";
-            print "<h1>TWO</h1>";
-            print_r($term_ids);
-            print "</pre>";
-
-            error_log( "Setting Cache" );
             wp_cache_add($cache_key, $term_ids, \PMC\PostType\pmcPostType::$cache_group, \PMC\PostType\pmcPostType::$cache_expire);
         }
 
