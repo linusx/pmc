@@ -18,15 +18,16 @@ class pmcCommentWidget extends \WP_Widget {
 
     /**
      * Display the widget on the page
-     *
+     * If Co-Authors Plus plugin is installed and active
+     * it will display all authors
+     * 
      * @global type $post
      * @param array $args
      * @param object $instance
      */
     public function widget( $args, $instance ) {
         global $post;
-                
-        $title = apply_filters( 'widget_title', $instance['title'] );
+
         $author = $instance['author'];
 
         if (!empty($author)) {
